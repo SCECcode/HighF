@@ -25,7 +25,7 @@ import subprocess
 
 if __name__ == '__main__':
     if len(sys.argv) < 1:
-        print "Usage: directory_list.py pathname"
+        print "Usage: create_comparison_plots.py"
     obs_dir =  "/Users/maechlin/Desktop/LaHabra_Obs"
     syn_dir = "/Users/maechlin/Desktop/sdsu_20160516"
     rwg_dir = "/Users/maechlin/Desktop/rwg_20160519/FiniteFault-Wei2014_SmallReg"
@@ -134,9 +134,9 @@ if __name__ == '__main__':
     os.environ["SACHOME"] = "/Users/maechlin/sac"
     os.environ["SACAUX"] = "/Users/maechlin/sac/aux"
     os.environ["SAC_DISPLAY_COPYRIGHT"] = "0"
-    #freqs = [4,3,2,1,0.5,0.3]
 
-    freqs = [0.3]
+    freqs = [0.5]
+    #freqs = [4,3,2,1,0.5]
     
     for key,values in good_file_dict.iteritems():
         for freq in freqs:

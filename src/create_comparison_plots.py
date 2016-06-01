@@ -25,19 +25,21 @@ import subprocess
 
 if __name__ == '__main__':
     if len(sys.argv) < 1:
-        print "Usage: create_comparison_plots.py"
-    obs_dir =  "/Users/maechlin/Desktop/LaHabra_Obs"
-    syn_dir = "/Users/maechlin/Desktop/sdsu_20160516"
-    rwg_dir = "/Users/maechlin/Desktop/rwg_20160519/FiniteFault-Wei2014_SmallReg"
+        print "Usage: ./create_comparison_plots.py"
+    obs_dir =  "/Users/maechlin/Desktop/LaHabra_Obs_copy"
+    syn_dir = "/Users/maechlin/Desktop/sdsu_20160516_copy"
+    rwg_dir = "/Users/maechlin/Desktop/rwg_20160519_copy/PntSrc_SmallReg"
     
     obs_file_list = []
     syn_file_list = []
     rwg_file_list = []
+    
     obs_file_dict = {}
     combined_awp_file_dict =  {}
     combined_rwg_file_dict =  {}
     
     file_count = 0
+    # Build a list of station_key, path to .V2 files
     for root, _, filenames in os.walk(obs_dir): 
         for filename in filenames:            
             if ".V2" in filename and "CHAN" not in filename:
@@ -46,6 +48,7 @@ if __name__ == '__main__':
                 obs_file_dict[filename] = os.path.join(root,filename)
     print "Total Obs Files:",len(obs_file_list), len(obs_file_dict), file_count
     
+    # Build a list of station_key, path to sdsu files, and path to obs file
     for root,_,filenames in os.walk(syn_dir):
         for filename in filenames:
             if ".dat" in filename:
@@ -58,7 +61,8 @@ if __name__ == '__main__':
                     matched_pair.append(obs_file_dict[newfstring])
                     matched_pair.append(os.path.join(root,filename))
                     combined_awp_file_dict[newfstring] = matched_pair
-                    
+    
+    # Build a list of station_key, rwg files
     for root,_,filenames in os.walk(rwg_dir):
         for filename in filenames:
             if ".bbp" in filename:
@@ -73,7 +77,9 @@ if __name__ == '__main__':
                     combined_rwg_file_dict[newfstring] = matched_pair
 
     #
-    # Find the intersection of two dictionaries
+    # Find the intersection of two dictionaries, sdsu, and rwg.
+    # obs file comes from awp dict, assuming it is the same as the obs file in the rwg dataset
+    # Might eliminate possiblity of error by checking that awp, and rwg obs files are the same
     intersect_dict = {}
     for item in combined_awp_file_dict.keys():
         if combined_rwg_file_dict.has_key(item):
@@ -165,6 +171,10 @@ if __name__ == '__main__':
             # at each frequency. Then the SAC files are processed like the simulation data.
             # in the future, we can rotate the observations only once, not for each freq.
             #
+            # SAC Header values are:
+            # IDEL IVEL - velocity in nm/sec velocity
+            # CMPAZ 0 - component azimth degree clockwise frm north
+            # CMPINC 90 - comoponent incident angle degrees from vertical
             obs_filename_parts = values[0].split(".")
             gram_to_rotate360 = "%s-%.2f.040.sac"%(obs_filename_parts[0],f_freq)
             print "rotating",gram_to_rotate360
@@ -176,7 +186,7 @@ if __name__ == '__main__':
             cmd = "read %s\n" % (gram_to_rotate360) 
             cmd = cmd + "chnhdr IDEP IVEL\n"
             cmd = cmd + "chnhdr CMPAZ 0\n"
-            cmd = cmd + "chnhdr CMPINC 90\n"
+            cmd = cmd + "chnhdr CMPINC 0\n"
             cmd = cmd + "writehdr\n"
             cmd = cmd + "quit\n"
             print cmd
@@ -191,7 +201,7 @@ if __name__ == '__main__':
             cmd = "read %s\n" % (gram_to_rotate090) 
             cmd = cmd + "chnhdr IDEP IVEL\n"
             cmd = cmd + "chnhdr CMPAZ 90\n"
-            cmd = cmd + "chnhdr CMPINC 90\n"
+            cmd = cmd + "chnhdr CMPINC 0\n"
             cmd = cmd + "writehdr\n"
             cmd = cmd + "quit\n"
             print cmd
@@ -251,16 +261,16 @@ if __name__ == '__main__':
             # remove _obs_ from filename so wildcard plots both _obs_ and _awp_
             #
             subfile_parts = obs_filename_parts[0].split("_")
-            gram_to_plot130 = "%s_%s_%s_*-%.2f.130.sac"%(subfile_parts[0],subfile_parts[1],subfile_parts[2],f_freq)
             gram_to_plot040 = "%s_%s_%s_*-%.2f.040.sac"%(subfile_parts[0],subfile_parts[1],subfile_parts[2],f_freq)
+            gram_to_plot130 = "%s_%s_%s_*-%.2f.130.sac"%(subfile_parts[0],subfile_parts[1],subfile_parts[2],f_freq)
             gram_to_plotver = "%s_%s_%s_*-%.2f.ver.sac"%(subfile_parts[0],subfile_parts[1],subfile_parts[2],f_freq)
     
-            gram_out_plot130 = "%s-%.2f.130.pdf"%(obs_filename_parts[0],f_freq)
             gram_out_plot040 = "%s-%.2f.040.pdf"%(obs_filename_parts[0],f_freq)
+            gram_out_plot130 = "%s-%.2f.130.pdf"%(obs_filename_parts[0],f_freq)
             gram_out_plotver = "%s-%.2f.ver.pdf"%(obs_filename_parts[0],f_freq)
                 
-            fft_filename130 = "%s-%.2f.130-FFT.pdf"%(obs_filename_parts[0],f_freq)
             fft_filename040 = "%s-%.2f.040-FFT.pdf"%(obs_filename_parts[0],f_freq)
+            fft_filename130 = "%s-%.2f.130-FFT.pdf"%(obs_filename_parts[0],f_freq)
             fft_filenamever = "%s-%.2f.ver-FFT.pdf"%(obs_filename_parts[0],f_freq)            
             #
             # Read and plot 130 component FFT

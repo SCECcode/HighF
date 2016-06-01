@@ -102,6 +102,7 @@ files in the src directory.
 * Number of input synthetics is hard coded. This may be the most significant limitation. Current version,
 is hard coded to process two types of synthetics. Requires a code modification to process
 * The code has a hard code path to the sac executable
+* The convert_bbp2sac hard codes the output filenames to *.040.sac *.130.sac
 
 * Improvements *
 Each time a bbp file is created, we should add a standard bbp file header with useful information.

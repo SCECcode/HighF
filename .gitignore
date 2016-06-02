@@ -2,6 +2,7 @@
 .project
 .pydevproject
 .o
+compiled_code/*.o
 BBPtoSAC
 *.pdf
 *.bbp

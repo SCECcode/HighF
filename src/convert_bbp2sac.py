@@ -78,17 +78,18 @@ def convert_bbp2sac(input_bbp_file):
     # install = Install_cfg.getInstance()
     
     # Now convert them into sac format
-    # Could be blocking/non-blocking issues here
-    # since there is no gaurentee that this completes before proceeding
-    # Appearance are it works, but if problems occur convert this to a blocking system call
+    # Flush outputs to files are written before they are renamed/removed
     #
     for comp in ["040", "130", "ver"]:
         file_in = "%s.%s" % (base_file, comp)
         file_out = "%s.sac" % (file_in)
         cmd = "echo '%s' > tmp" % (file_in)
         os.system(cmd)
+        sys.stdout.flush()
         cmd = ("%s < tmp >> /dev/null 2>&1" % ("../bin/BBPtoSAC"))
         os.system(cmd)
+        sys.stdout.flush()
+        sys.stderr.flush()
         os.rename("output.sac", file_out)
         os.unlink(file_in)
     

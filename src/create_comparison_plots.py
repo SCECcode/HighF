@@ -141,7 +141,7 @@ if __name__ == '__main__':
     os.environ["SACAUX"] = "/Users/maechlin/sac/aux"
     os.environ["SAC_DISPLAY_COPYRIGHT"] = "0"
 
-    freqs = [0.5]
+    freqs = [0.3]
     #freqs = [4,3,2,1,0.5]
     
     for key,values in good_file_dict.iteritems():
@@ -186,7 +186,7 @@ if __name__ == '__main__':
             cmd = "read %s\n" % (gram_to_rotate360) 
             cmd = cmd + "chnhdr IDEP IVEL\n"
             cmd = cmd + "chnhdr CMPAZ 0\n"
-            cmd = cmd + "chnhdr CMPINC 0\n"
+            cmd = cmd + "chnhdr CMPINC 90\n"
             cmd = cmd + "writehdr\n"
             cmd = cmd + "quit\n"
             print cmd
@@ -201,7 +201,7 @@ if __name__ == '__main__':
             cmd = "read %s\n" % (gram_to_rotate090) 
             cmd = cmd + "chnhdr IDEP IVEL\n"
             cmd = cmd + "chnhdr CMPAZ 90\n"
-            cmd = cmd + "chnhdr CMPINC 0\n"
+            cmd = cmd + "chnhdr CMPINC 90\n"
             cmd = cmd + "writehdr\n"
             cmd = cmd + "quit\n"
             print cmd
@@ -214,7 +214,7 @@ if __name__ == '__main__':
                           stdin  = subprocess.PIPE,
                           stderr = subprocess.STDOUT )
       
-            cmd = "read %s %s\n" % (gram_to_rotate360,gram_to_rotate090) 
+            cmd = "read %s %s\n" % (gram_to_rotate360,gram_to_rotate090)
             cmd = cmd + "rotate through %f\n" % (rotation_angle)
             cmd = cmd + "write %s %s\n" % (gram_to_rotate360,gram_to_rotate090)
             cmd = cmd + "quit\n"

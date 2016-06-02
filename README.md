@@ -15,6 +15,9 @@ synthetics should be in their own subdirectories.
 Then, the user calls the top level script:
 ./create_comparison_plots.py
 
+There is a test input data set posted at:
+http://hypocenter.usc.edu/research/HighF/Test_data_set.zip that contains observations for LaHabra, and synthetics for the current
+version of the code including the AWP method, and the RWG method. Hercules processing is not included, and needs to be added.
 
 The observations directories will be searched and all occurances of .V2 files will be added
 to a list of input files. During this processing stage, the code creates a dictionary with a key, that is based on the station name used
